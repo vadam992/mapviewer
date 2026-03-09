@@ -27,6 +27,13 @@
       @cancel="showDelete = false"
       @confirm="confirmDelete"
     />
+
+    <LocationModal
+      v-if="showLocation"
+      :customer="locationCustomer"
+      @close="showLocation = false"
+      @save="saveLocation"
+    />
   </div>
 </template>
 
@@ -36,8 +43,12 @@ import { useCustomers } from "../../composables/useCustomers";
 import CustomersTable from "./CustomersTable.vue";
 import CustomerFormModal from "./CustomerFormModal.vue";
 import DeleteConfirmModal from "./DeleteConfirmModal.vue";
+import LocationModal from "./LocationModal.vue";
 const showDelete = ref(false);
 const deleteId = ref<string | null>(null);
+const showLocation = ref(false);
+const locationCustomer = ref(null as any);
+
 const { customers, addCustomer, updateCustomer, deleteCustomer } =
   useCustomers();
 
@@ -85,6 +96,12 @@ function confirmDelete() {
 }
 
 function openLocationModal(customer: any) {
-  console.log("Lokáció modal megnyitása:", customer);
+  locationCustomer.value = customer;
+  showLocation.value = true;
+}
+
+function saveLocation(updatedCustomer: any) {
+  updateCustomer(updatedCustomer);
+  showLocation.value = false;
 }
 </script>
